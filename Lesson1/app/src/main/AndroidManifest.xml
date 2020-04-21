@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".moxy.view.MoxyActivity">
+
+        </activity>
     </application>
 
 </manifest>
