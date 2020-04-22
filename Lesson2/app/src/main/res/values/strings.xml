@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Lesson2</string>
     <string name="button">Button</string>
+    <string name="subscribe">Подписаться</string>
+    <string name="unsubscribe">Отписаться</string>
+    <string name="spam">Спам</string>
 </resources>
