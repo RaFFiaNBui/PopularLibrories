@@ -13,6 +13,9 @@
 
         </activity>
         <activity android:name=".observer.ObserverActivity">
+
+        </activity>
+        <activity android:name=".rxjava.RxjavaActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
