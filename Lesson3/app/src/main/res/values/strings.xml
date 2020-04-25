@@ -2,4 +2,5 @@
     <string name="app_name">Lesson3</string>
     <string name="subscribe">Subscribe</string>
     <string name="unsubscribe">Unsubscribe</string>
+    <string name="send">Send</string>
 </resources>
