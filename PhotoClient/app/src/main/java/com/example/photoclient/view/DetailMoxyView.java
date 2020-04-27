@@ -5,7 +5,6 @@ import moxy.viewstate.strategy.AddToEndSingleStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
 
 public interface DetailMoxyView extends MvpView {
-
     @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void empty(int position);
+    void empty();
 }
