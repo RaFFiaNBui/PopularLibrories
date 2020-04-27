@@ -15,7 +15,9 @@ import moxy.presenter.InjectPresenter;
 
 public class MainActivity extends MvpAppCompatActivity implements MoxyView {
 
-    private static final String POSITION = "position";
+    private static final String URL = "url";
+
+    MyAdapter myAdapter;
 
     @InjectPresenter
     ThreePresenter presenter;
@@ -32,14 +34,19 @@ public class MainActivity extends MvpAppCompatActivity implements MoxyView {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
-        MyAdapter myAdapter = new MyAdapter(presenter);
+        myAdapter = new MyAdapter(presenter);
         recyclerView.setAdapter(myAdapter);
     }
 
     @Override
-    public void showPicture(int position) {
+    public void showPicture(String url) {
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(POSITION, position);
+        intent.putExtra(URL, url);
         startActivity(intent);
+    }
+
+    @Override
+    public void updateRecyclerView() {
+        myAdapter.notifyDataSetChanged();
     }
 }
