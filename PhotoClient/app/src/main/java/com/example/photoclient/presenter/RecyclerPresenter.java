@@ -2,8 +2,8 @@ package com.example.photoclient.presenter;
 
 import com.example.photoclient.view.IViewHolder;
 
-public interface IRecyclerThreePresenter {
+public interface RecyclerPresenter {
     void bindView(IViewHolder iViewHolder);
     int getItemCount();
-    void counter(int position);
+    void getUrl(String url);
 }
