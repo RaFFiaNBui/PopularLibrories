@@ -7,5 +7,8 @@ import moxy.viewstate.strategy.StateStrategyType;
 public interface MoxyView extends MvpView {
 
     @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void showPicture(int position);
+    void showPicture(String url);
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class)
+    void updateRecyclerView();
 }
