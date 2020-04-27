@@ -9,15 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photoclient.R;
-import com.example.photoclient.presenter.IRecyclerThreePresenter;
+import com.example.photoclient.model.PicassoLoader;
+import com.example.photoclient.presenter.RecyclerPresenter;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    private IRecyclerThreePresenter iRecyclerMainPresenter;
+    private RecyclerPresenter recyclerPresenter;
+    private PicassoLoader picassoLoader;
 
     //package-private
-    MyAdapter(IRecyclerThreePresenter iRecyclerMainPresenter) {
-        this.iRecyclerMainPresenter = iRecyclerMainPresenter;
+    MyAdapter(RecyclerPresenter iRecyclerMainPresenter) {
+        this.recyclerPresenter = iRecyclerMainPresenter;
+        this.picassoLoader = new PicassoLoader();
     }
 
     @NonNull
@@ -30,29 +33,36 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
         holder.position = position;
-        iRecyclerMainPresenter.bindView(holder);
+        recyclerPresenter.bindView(holder);
     }
 
     @Override
     public int getItemCount() {
-        return iRecyclerMainPresenter.getItemCount();
+        return recyclerPresenter.getItemCount();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements IViewHolder {
 
         private ImageView imageView;
         private int position = 0;
+        private String url = "";
 
         //package-private
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
-            imageView.setOnClickListener(v -> iRecyclerMainPresenter.counter(position));
+            imageView.setOnClickListener(v -> recyclerPresenter.getUrl(url));
         }
 
         @Override
-        public void setImage() {
-            imageView.setImageResource(R.drawable.btn_rating_star_off_pressed_holo_dark);
+        public void setImage(String url) {
+            this.url = url;
+            picassoLoader.loadImage(url, imageView);
+        }
+
+        @Override
+        public int getPos() {
+            return position;
         }
     }
 }
