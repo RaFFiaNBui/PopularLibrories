@@ -12,6 +12,9 @@ import com.example.photoclient.R;
 import com.example.photoclient.model.PicassoLoader;
 import com.example.photoclient.presenter.RecyclerPresenter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private RecyclerPresenter recyclerPresenter;
@@ -43,14 +46,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     class MyViewHolder extends RecyclerView.ViewHolder implements IViewHolder {
 
-        private ImageView imageView;
         private int position = 0;
         private String url = "";
+
+        @BindView(R.id.image_view)
+        ImageView imageView;
 
         //package-private
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.image_view);
+            ButterKnife.bind(this, itemView);
             imageView.setOnClickListener(v -> recyclerPresenter.getUrl(url));
         }
 

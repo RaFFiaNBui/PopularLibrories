@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.photoclient.R;
 import com.example.photoclient.presenter.ThreePresenter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 
@@ -22,15 +24,18 @@ public class MainActivity extends MvpAppCompatActivity implements MoxyView {
     @InjectPresenter
     ThreePresenter presenter;
 
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         initRecyclerView();
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
