@@ -10,7 +10,7 @@ import moxy.MvpPresenter;
 @InjectViewState
 public class DetailPresenter extends MvpPresenter<DetailMoxyView> {
 
-    private static final String TAG = "tag";
+    private static final String TAG = "MyTag";
 
     public void showPosition(int position) {
         Log.d(TAG, "DetailPresenter.showPosition: " + position);
