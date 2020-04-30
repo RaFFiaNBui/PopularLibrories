@@ -5,6 +5,8 @@ import android.util.Log;
 import com.example.photoclient.model.gson.Hit;
 import com.example.photoclient.model.gson.Photo;
 import com.example.photoclient.model.retrofit.ApiRequest;
+import com.example.photoclient.model.room.App;
+import com.example.photoclient.model.room.UrlDao;
 import com.example.photoclient.view.IViewHolder;
 import com.example.photoclient.view.MoxyView;
 
@@ -13,24 +15,26 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 
 @InjectViewState
 public class ThreePresenter extends MvpPresenter<MoxyView> implements RecyclerPresenter {
 
-    private static final String TAG = "tag";
+    private static final String TAG = "MyTag";
 
     private List<Hit> hitList;
     private ApiRequest api;
+    private UrlDao urlDao;
 
     public ThreePresenter() {
-        this.api = new ApiRequest();
+        this.urlDao = App.getAppDatabase().urlDao();
     }
 
     @Override
     protected void onFirstViewAttach() {
-        getAllPhoto();
+        loadDatabase();
     }
 
     private void getAllPhoto() {
@@ -38,9 +42,37 @@ public class ThreePresenter extends MvpPresenter<MoxyView> implements RecyclerPr
 
         Disposable disposable = single.observeOn(AndroidSchedulers.mainThread()).subscribe(photo -> {
                     hitList = photo.hits;
+                    Log.d(TAG, "ThreePresenter.loadDatabase: Загрузка по api успешна");
+                    saveToDatabase();
                     getViewState().updateRecyclerView();
-                }, throwable -> Log.d(TAG, "getAllPhoto: Error" + throwable)
+                }, throwable -> Log.d(TAG, "ThreePresenter.getAllPhoto: Error" + throwable)
         );
+    }
+
+    private void saveToDatabase() {
+        Disposable disposable1 = urlDao.addUrlList(hitList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(webformatURL -> {
+                    Log.d(TAG, "ThreePresenter.saveToDatabase: Запись в базу данных успешна");
+                }, throwable -> {
+                    Log.e(TAG, "ThreePresenter.saveToDatabase: Ошибка записи в БД ", throwable);
+                });
+    }
+
+    private void loadDatabase() {
+        Disposable disposable1 = urlDao.getAll().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(list -> {
+                    if (list.size() == 0) {
+                        this.api = new ApiRequest();
+                        getAllPhoto();
+                    } else {
+                        Log.d(TAG, "ThreePresenter.loadDatabase: Выгрузка из БД успешна");
+                        this.hitList = list;
+                        getViewState().updateRecyclerView();
+                    }
+                }, throwable -> {
+                    Log.e(TAG, "loadDatabase: Ошибка чтения БД ", throwable);
+                });
+
     }
 
     @Override
