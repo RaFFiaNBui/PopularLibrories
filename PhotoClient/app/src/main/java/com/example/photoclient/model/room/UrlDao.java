@@ -19,4 +19,7 @@ public interface UrlDao {
 
     @Query("SELECT * FROM urls")
     Single<List<Hit>> getAll();
+
+    @Query("DELETE FROM urls")
+    Single<Integer> deleteAll();
 }
