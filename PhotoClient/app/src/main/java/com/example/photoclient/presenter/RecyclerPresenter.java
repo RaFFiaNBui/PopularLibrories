@@ -6,4 +6,5 @@ public interface RecyclerPresenter {
     void bindView(IViewHolder iViewHolder);
     int getItemCount();
     void getUrl(String url);
+    void clearDatabase();
 }
