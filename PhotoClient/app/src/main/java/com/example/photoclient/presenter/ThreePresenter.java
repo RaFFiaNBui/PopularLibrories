@@ -25,7 +25,6 @@ public class ThreePresenter extends MvpPresenter<MoxyView> implements RecyclerPr
     private static final String TAG = "MyTag";
 
     private List<Hit> hitList;
-    private ApiRequest api;
     private UrlDao urlDao;
 
     public ThreePresenter() {
@@ -38,6 +37,7 @@ public class ThreePresenter extends MvpPresenter<MoxyView> implements RecyclerPr
     }
 
     private void getAllPhoto() {
+        ApiRequest api = new ApiRequest();
         Observable<Photo> single = api.requestServer();
 
         Disposable disposable = single.observeOn(AndroidSchedulers.mainThread()).subscribe(photo -> {
@@ -51,27 +51,21 @@ public class ThreePresenter extends MvpPresenter<MoxyView> implements RecyclerPr
 
     private void saveToDatabase() {
         Disposable disposable1 = urlDao.addUrlList(hitList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(webformatURL -> {
-                    Log.d(TAG, "ThreePresenter.saveToDatabase: Запись в базу данных успешна");
-                }, throwable -> {
-                    Log.e(TAG, "ThreePresenter.saveToDatabase: Ошибка записи в БД ", throwable);
-                });
+                .subscribe(webformatURL -> Log.d(TAG, "ThreePresenter.saveToDatabase: Запись в базу данных успешна"),
+                        throwable -> Log.e(TAG, "ThreePresenter.saveToDatabase: Ошибка записи в БД ", throwable));
     }
 
     private void loadDatabase() {
         Disposable disposable1 = urlDao.getAll().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
                     if (list.size() == 0) {
-                        this.api = new ApiRequest();
                         getAllPhoto();
                     } else {
                         Log.d(TAG, "ThreePresenter.loadDatabase: Выгрузка из БД успешна");
                         this.hitList = list;
                         getViewState().updateRecyclerView();
                     }
-                }, throwable -> {
-                    Log.e(TAG, "loadDatabase: Ошибка чтения БД ", throwable);
-                });
+                }, throwable -> Log.e(TAG, "loadDatabase: Ошибка чтения БД ", throwable));
 
     }
 
@@ -91,5 +85,14 @@ public class ThreePresenter extends MvpPresenter<MoxyView> implements RecyclerPr
     @Override
     public void getUrl(String url) {
         getViewState().showPicture(url);
+    }
+
+    @Override
+    public void clearDatabase() {
+        Disposable disposable = urlDao.deleteAll().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(urlList -> {
+                    Log.d(TAG, "clearDatabase: База данных очищена");
+                    getAllPhoto();
+                }, throwable -> Log.e(TAG, "clearDatabase: Ошибка очистки базы данных", throwable));
     }
 }
