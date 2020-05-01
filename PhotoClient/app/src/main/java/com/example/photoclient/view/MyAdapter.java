@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photoclient.R;
+import com.example.photoclient.model.ErrorLoadingListener;
 import com.example.photoclient.model.PicassoLoader;
 import com.example.photoclient.presenter.RecyclerPresenter;
 
@@ -49,6 +50,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         private int position = 0;
         private String url = "";
 
+        private final ErrorLoadingListener errorLoadingListener = new ErrorLoadingListener() {
+            @Override
+            public void onErrorLoading() {
+                recyclerPresenter.clearDatabase();
+            }
+        };
+
         @BindView(R.id.image_view)
         ImageView imageView;
 
@@ -62,7 +70,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         @Override
         public void setImage(String url) {
             this.url = url;
-            picassoLoader.loadImage(url, imageView);
+            picassoLoader.loadImage(url, imageView, errorLoadingListener);
         }
 
         @Override
