@@ -1,0 +1,7 @@
+Результаты добавления proguard в приложение photoclient:
+
+1) minifyEnabled false - размер архива 2.7 mb
+2) minifyEnabled true - размер архива 1.3 mb, данные зашифрованы
+3) shrinkResources true - размер архива 1.2 mb
+4) multiDexEnabled true - предполагалось, что classes.dex будет разбит 
+на 2 файла, но у меня все осталось без изменений.
